@@ -6,7 +6,7 @@
  * Time: 08:40
  */
 
-namespace FormLibrary\App;
+namespace FormLibrary\Src;
 
 
 class RenderPage

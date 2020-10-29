@@ -6,15 +6,21 @@
  * Time: 09:45
  */
 
-namespace FormLibrary\App\Controllers;
+namespace FormLibrary\Src\Controllers;
 
-use FormLibrary\App\Abstracts\AbstractForm;
-use FormLibrary\App\FormBuilder;
+use FormLibrary\Src\Abstracts\AbstractForm;
+use FormLibrary\Src\FormBuilder;
 
 class UserForm extends AbstractForm
 {
 
     public $html = '';
+    
+    public $rules = [
+        'first_name' => [
+            'required|min:1|max:'
+        ]
+    ];
     
     public $errors = [];
 

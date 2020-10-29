@@ -6,12 +6,14 @@
  * Time: 12:53
  */
 
-namespace FormLibrary\App\Abstracts;
+namespace FormLibrary\Src\Abstracts;
 
 
 abstract class AbstractForm
 {
     public $html = '';
+
+    public $rules = [];
 
     public $errors = [];
 

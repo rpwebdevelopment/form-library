@@ -7,4 +7,4 @@
  */
 require ('vendor/autoload.php');
 
-new \FormLibrary\App\Bootstrap();
+new \FormLibrary\Src\Bootstrap();

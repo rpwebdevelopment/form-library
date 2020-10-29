@@ -6,7 +6,7 @@
  * Time: 08:41
  */
 
-namespace FormLibrary\App;
+namespace FormLibrary\Src;
 
 
 class Routes
@@ -27,7 +27,7 @@ class Routes
      * $namespace - default controller namespace
      * @var string
      */
-    public $namespace = 'FormLibrary\\App\\Controllers\\';
+    public $namespace = 'FormLibrary\\Src\\Controllers\\';
 
     /**
      * Routes constructor.

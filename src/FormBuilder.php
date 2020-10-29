@@ -6,7 +6,7 @@
  * Time: 12:37
  */
 
-namespace FormLibrary\App;
+namespace FormLibrary\Src;
 
 use Volnix\CSRF\CSRF;
 

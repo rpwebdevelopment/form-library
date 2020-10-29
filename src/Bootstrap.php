@@ -6,9 +6,9 @@
  * Time: 08:47
  */
 
-namespace FormLibrary\App;
+namespace FormLibrary\Src;
 
-use FormLibrary\App\RenderPage;
+use FormLibrary\Src\RenderPage;
 
 
 class Bootstrap

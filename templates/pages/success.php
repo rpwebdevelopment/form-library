@@ -14,7 +14,7 @@
     </thead>
     <tbody>
 <?php
-    foreach ($this->request as $title => $value) {
+    foreach (self::$content as $title => $value) {
         ?>
         <tr>
             <td><?= ucwords(str_replace('_', ' ', $title)) ?></td>

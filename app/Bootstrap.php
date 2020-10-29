@@ -22,6 +22,8 @@ class Bootstrap
         $route_list = ($_SERVER['REQUEST_METHOD'] == 'GET') ?
             $routes->get : $routes->post;
 
+        $request = ($_SERVER['REQUEST_METHOD'] == 'GET') ? $_GET : $_POST;
+
         $page = $route_list[$_SERVER['REQUEST_URI']] ??
             $route_list[rtrim($_SERVER['REQUEST_URI'], '/')] ??
             false;
@@ -31,6 +33,6 @@ class Bootstrap
             die;
         }
 
-        RenderPage::render($page);
+        RenderPage::render($page, $request);
     }
 }

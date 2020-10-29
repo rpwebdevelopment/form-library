@@ -38,9 +38,11 @@ class RenderPage
 
     /**
      * render - parse the $page array and call any required controllers
+     * 
      * @param null $page
+     * @param array $request
      */
-    public static function render($page = null)
+    public static function render($page = null, $request = [])
     {
         self::$page = $page;
         self::verifyRoute();
@@ -51,7 +53,7 @@ class RenderPage
             try {
                 $obj = new $full_class();
                 $method = $page['method'];
-                $obj->$method();
+                $obj->$method($request);
                 self::$content .= $obj->html;
             } catch (\Exception $e) {
                 print_r($e->getMessage());

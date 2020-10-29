@@ -22,6 +22,10 @@ class FormValidator
 
     public $successful = false;
 
+    /**
+     * FormValidator constructor - build ruleset
+     * @param array $rules
+     */
     public function __construct($rules = [])
     {
         foreach ($rules as $field => $ruleset) {
@@ -41,6 +45,11 @@ class FormValidator
 
     }
 
+    /**
+     * validate - parse rules and run all validation methods on request data
+     *
+     * @param array $request
+     */
     public function validate(array $request)
     {
         // validate our CSRF token
@@ -73,6 +82,12 @@ class FormValidator
         $this->successful = (!count($this->errors));
     }
 
+    /**
+     * string - sanitize strings
+     *
+     * @param $field
+     * @param $string
+     */
     public function string($field, $string)
     {
         if (!is_string($string)) {
@@ -86,6 +101,12 @@ class FormValidator
         $this->request[$field] = $string;
     }
 
+    /**
+     * email - ensure valid email address given
+     *
+     * @param $field
+     * @param $string
+     */
     public function email($field, $string)
     {
         if (!filter_var($string, FILTER_VALIDATE_EMAIL)) {
@@ -106,6 +127,12 @@ class FormValidator
         $this->request[$field] = $string;
     }
 
+    /**
+     * int - ensure value is an integer
+     *
+     * @param $field
+     * @param $int
+     */
     public function int($field, $int)
     {
         if (!filter_var($int, FILTER_VALIDATE_INT)) {
@@ -118,6 +145,12 @@ class FormValidator
         $this->request[$field] = $int;
     }
 
+    /**
+     * float - ensure value is a float
+     *
+     * @param $field
+     * @param $float
+     */
     public function float($field, $float)
     {
         if (!filter_var($float, FILTER_VALIDATE_FLOAT)) {
@@ -130,6 +163,12 @@ class FormValidator
         $this->request[$field] = $float;
     }
 
+    /**
+     * bool - ensure value is boolean
+     *
+     * @param $field
+     * @param $bool
+     */
     public function bool($field, $bool)
     {
         if (!filter_var($bool, FILTER_VALIDATE_BOOLEAN)) {
@@ -142,6 +181,13 @@ class FormValidator
         return;
     }
 
+    /**
+     * min - ensure string is at least as long as minimum length
+     *
+     * @param $field
+     * @param $spec
+     * @param $value
+     */
     public function min($field, $spec, $value)
     {
         if (strlen($value) < $spec) {
@@ -153,6 +199,13 @@ class FormValidator
         $this->request[$field] = $value;
     }
 
+    /**
+     * max - ensure string does not exceed expected length
+     *
+     * @param $field
+     * @param $spec
+     * @param $value
+     */
     public function max($field, $spec, $value)
     {
         if (strlen($value) > $spec) {
@@ -164,6 +217,13 @@ class FormValidator
         $this->request[$field] = $value;
     }
 
+    /**
+     * above - ensure given value is greater than specified
+     *
+     * @param $field
+     * @param $spec
+     * @param $value
+     */
     public function above($field, $spec, $value)
     {
         if (!filter_var($value, FILTER_VALIDATE_INT) &&
@@ -182,6 +242,13 @@ class FormValidator
         $this->request[$field] = $value;
     }
 
+    /**
+     * below - ensure given value is less than specified
+     *
+     * @param $field
+     * @param $spec
+     * @param $value
+     */
     public function below($field, $spec, $value)
     {
         if (!filter_var($value, FILTER_VALIDATE_INT) &&
@@ -198,6 +265,13 @@ class FormValidator
         $this->request[$field] = $value;
     }
 
+    /**
+     * arr - ensure given value matches an expected value
+     *
+     * @param $field
+     * @param $spec
+     * @param $value
+     */
     public function arr($field, $spec, $value)
     {
         $array = explode(',', $spec);
@@ -210,6 +284,14 @@ class FormValidator
         $this->request[$field] = $value;
     }
 
+    /**
+     * checkbox - ensure value saves in predetermined format
+     *
+     * @param $field
+     * @param $spec
+     * @param $value
+     * @throws \Exception
+     */
     public function checkbox($field, $spec, $value)
     {
         if ($spec == 'int') {

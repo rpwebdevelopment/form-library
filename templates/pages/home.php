@@ -1,1 +1,4 @@
-<h1>Hello World</h1>
+<h1>Form Generation Implementing Class Build</h1>
+<?php
+
+echo self::$content;

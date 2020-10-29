@@ -16,16 +16,30 @@ class FormBuilder
 
     public $fields = [];
 
+    /**
+     * FormBuilder constructor.
+     */
     public function __construct()
     {
         $this->open();
     }
 
+    /**
+     * loadHtml - return html string from given template file
+     *
+     * @param $file
+     * @return string
+     */
     protected function loadHtml($file) : string
     {
         return file_get_contents(__DIR__ . '/../templates/forms/components/' . $file . '.html');
     }
 
+    /**
+     * write - compile instance form into singular html string
+     *
+     * @return string
+     */
     public function write() : string
     {
         $html = '';
@@ -36,6 +50,11 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * open - populate form opening tags and add CSRF token
+     *
+     * @return string
+     */
     public function open() : string
     {
         $html = $this->loadHtml(__FUNCTION__);
@@ -43,11 +62,25 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * close - populate form closing tag
+     *
+     * @return string
+     */
     public function close() : string
     {
         return $this->loadHtml(__FUNCTION__);
     }
 
+    /**
+     * generateDefault - reusable method to prevent code duplication
+     *
+     * @param string $file
+     * @param bool $required
+     * @param array $custom
+     * @param bool $error
+     * @return array
+     */
     protected function generateDefault($file = '', $required = false, $custom = [], $error = false) : array
     {
         return [
@@ -58,6 +91,12 @@ class FormBuilder
         ];
     }
 
+    /**
+     * customString - generate custom string if any additional parameters are given
+     *
+     * @param array $custom
+     * @return string
+     */
     public function customString($custom = []) : string
     {
         $custom_string = '';
@@ -67,12 +106,29 @@ class FormBuilder
         return $custom_string;
     }
 
+    /**
+     * error - load and populate error template
+     *
+     * @param string $error
+     * @return string
+     */
     public function error($error = '') : string
     {
         $html = $this->loadHtml(__FUNCTION__);
         return sprintf($html, $error);
     }
 
+    /**
+     * text - add text input to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param bool $required
+     * @param array $custom
+     * @param bool $error
+     * @return string
+     */
     public function text($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
@@ -82,6 +138,17 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * number - add numeric input to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param bool $required
+     * @param array $custom
+     * @param bool $error
+     * @return string
+     */
     public function number($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
@@ -91,6 +158,17 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * email - add email input to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param bool $required
+     * @param array $custom
+     * @param bool $error
+     * @return string
+     */
     public function email($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
@@ -100,7 +178,13 @@ class FormBuilder
         return $html;
     }
 
-    public function option($options = []) : string
+    /**
+     * option - return options for select dropdown
+     *
+     * @param array $options
+     * @return string
+     */
+    private function option($options = []) : string
     {
         $html = '';
         foreach ($options as $value => $text) {
@@ -110,6 +194,18 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * select - add select input to form
+     *
+     * @param array $options
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param bool $required
+     * @param array $custom
+     * @param bool $error
+     * @return string
+     */
     public function select($options = [], $name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
@@ -120,6 +216,17 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * textarea - add textarea input to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param int $rows
+     * @param array $custom
+     * @param bool $error
+     * @return string
+     */
     public function textarea($name = '', $id = '', $label = '', $rows = 3, $custom = [], $error = false) : string
     {
         $default = $this->generateDefault(__FUNCTION__, false, $custom, $error);
@@ -129,6 +236,17 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * checkbox - add checkbox input to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param bool $required
+     * @param array $custom
+     * @param bool $error
+     * @return string
+     */
     public function checkbox($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
@@ -138,6 +256,15 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * radio - add singular radio input to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param array $custom
+     * @return string
+     */
     public function radio($name = '', $id = '', $label = '', $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, false, $custom, false);
@@ -147,6 +274,17 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * radioGroup - add collection of radio inputs to form
+     *
+     * @param string $name
+     * @param string $id
+     * @param array $labels
+     * @param array $custom
+     * @param null $title
+     * @param bool $error
+     * @return string
+     */
     public function radioGroup($name = '', $id = '', $labels = [], $custom = [], $title = null, $error = false) : string
     {
         $html = '<div class="form-group">';
@@ -165,6 +303,11 @@ class FormBuilder
         return $html;
     }
 
+    /**
+     * submit - add default submit button to form
+     *
+     * @return string
+     */
     public function submit() : string
     {
         $this->fields[] = $html = $this->loadHtml(__FUNCTION__);

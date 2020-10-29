@@ -15,6 +15,8 @@ class UserForm extends AbstractForm
 {
 
     public $html = '';
+    
+    public $errors = [];
 
     public $genders = [
         '' => 'Please Select',

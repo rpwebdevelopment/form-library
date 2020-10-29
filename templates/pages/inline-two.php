@@ -1,4 +1,8 @@
 <h1>Form Generation Inline Method Two</h1>
+<p>
+    <b>PLEASE NOTE:</b> No data handling has been added to this form,
+    it is simply here for demo purposes
+</p>
 <?php
 /**
  * Created by PhpStorm.

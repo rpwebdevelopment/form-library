@@ -18,10 +18,11 @@ class FormBuilder
 
     /**
      * FormBuilder constructor.
+     * @param bool $error
      */
-    public function __construct()
+    public function __construct($error = false)
     {
-        $this->open();
+        $this->open($error);
     }
 
     /**
@@ -53,11 +54,16 @@ class FormBuilder
     /**
      * open - populate form opening tags and add CSRF token
      *
+     * @param bool $error
      * @return string
      */
-    public function open() : string
+    public function open($error = false) : string
     {
         $html = $this->loadHtml(__FUNCTION__);
+        if ($error) {
+            $alert = $this->loadHtml('alert');
+            $html .= sprintf($alert, $error);
+        }
         $this->fields[] = $html .= $this->csrf = CSRF::getHiddenInputString();
         return $html;
     }
@@ -107,6 +113,21 @@ class FormBuilder
     }
 
     /**
+     * stringify - generate valid snake case string
+     *
+     * @param $str
+     * @return string
+     */
+    public function stringify($str) : string
+    {
+        return strtolower(
+            str_replace(' ', '_',
+                preg_replace('~(?<=\\w)([A-Z])~', '_$1', $str)
+            )
+        );
+    }
+
+    /**
      * error - load and populate error template
      *
      * @param string $error
@@ -121,19 +142,20 @@ class FormBuilder
     /**
      * text - add text input to form
      *
+     * @param bool $error
+     * @param null $val
      * @param string $name
      * @param string $id
      * @param string $label
      * @param bool $required
      * @param array $custom
-     * @param bool $error
      * @return string
      */
-    public function text($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
+    public function text($error = false, $val = null, $name = '', $id = '', $label = '', $required = false, $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
         $this->fields[] = $html = sprintf(
-            $default['html'], $name, $label, $default['class'], $id, $name, $default['required'], $default['custom'], $error
+            $default['html'], $name, $label, $default['class'], $val, $id, $name, $default['required'], $default['custom'], $error
         );
         return $html;
     }
@@ -141,19 +163,20 @@ class FormBuilder
     /**
      * number - add numeric input to form
      *
+     * @param bool $error
+     * @param null $val
      * @param string $name
      * @param string $id
      * @param string $label
      * @param bool $required
      * @param array $custom
-     * @param bool $error
      * @return string
      */
-    public function number($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
+    public function number($error = false, $val = null, $name = '', $id = '', $label = '', $required = false, $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
         $this->fields[] = $html = sprintf(
-            $default['html'], $name, $label, $default['class'], $id, $name, $default['required'], $default['custom'], $error
+            $default['html'], $name, $label, $default['class'], $val, $id, $name, $default['required'], $default['custom'], $error
         );
         return $html;
     }
@@ -161,19 +184,20 @@ class FormBuilder
     /**
      * email - add email input to form
      *
+     * @param bool $error
+     * @param null $val
      * @param string $name
      * @param string $id
      * @param string $label
      * @param bool $required
      * @param array $custom
-     * @param bool $error
      * @return string
      */
-    public function email($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
+    public function email($error = false, $val = null, $name = '', $id = '', $label = '', $required = false, $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
         $this->fields[] = $html = sprintf(
-            $default['html'], $name, $label, $default['class'], $id, $name, $default['required'], $default['custom'], $error
+            $default['html'], $name, $label, $default['class'], $val, $id, $name, $default['required'], $default['custom'], $error
         );
         return $html;
     }
@@ -182,14 +206,16 @@ class FormBuilder
      * option - return options for select dropdown
      *
      * @param array $options
+     * @param null $val
      * @return string
      */
-    private function option($options = []) : string
+    private function option($options = [], $val = null) : string
     {
         $html = '';
         foreach ($options as $value => $text) {
             $temp_html = $this->loadHtml(__FUNCTION__);
-            $html .= sprintf($temp_html, $value, $text);
+            $insert = ($val == $value) ? 'selected="selected"' : '';
+            $html .= sprintf($temp_html, $value, $insert, $text);
         }
         return $html;
     }
@@ -197,19 +223,20 @@ class FormBuilder
     /**
      * select - add select input to form
      *
+     * @param bool $error
+     * @param null $val
      * @param array $options
      * @param string $name
      * @param string $id
      * @param string $label
      * @param bool $required
      * @param array $custom
-     * @param bool $error
      * @return string
      */
-    public function select($options = [], $name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
+    public function select($error = false, $val = null, $options = [], $name = '', $id = '', $label = '', $required = false, $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
-        $options = $this->option($options);
+        $options = $this->option($options, $val);
         $this->fields[] = $html = sprintf(
             $default['html'], $name, $label, $default['class'], $id, $name, $default['required'], $default['custom'], $options, $error
         );
@@ -219,19 +246,20 @@ class FormBuilder
     /**
      * textarea - add textarea input to form
      *
+     * @param bool $error
+     * @param null $val
      * @param string $name
      * @param string $id
      * @param string $label
      * @param int $rows
      * @param array $custom
-     * @param bool $error
      * @return string
      */
-    public function textarea($name = '', $id = '', $label = '', $rows = 3, $custom = [], $error = false) : string
+    public function textarea($error = false, $val = null, $name = '', $id = '', $label = '', $rows = 3, $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, false, $custom, $error);
         $this->fields[] = $html = sprintf(
-            $default['html'], $name, $label, $default['class'], $id, $name, $rows, $default['custom'], $error
+            $default['html'], $name, $label, $default['class'], $id, $name, $rows, $default['custom'], $val, $error
         );
         return $html;
     }
@@ -239,19 +267,21 @@ class FormBuilder
     /**
      * checkbox - add checkbox input to form
      *
+     * @param bool $error
+     * @param null $val
      * @param string $name
      * @param string $id
      * @param string $label
      * @param bool $required
      * @param array $custom
-     * @param bool $error
      * @return string
      */
-    public function checkbox($name = '', $id = '', $label = '', $required = false, $custom = [], $error = false) : string
+    public function checkbox($error = false, $val = null, $name = '', $id = '', $label = '', $required = false, $custom = []) : string
     {
         $default = $this->generateDefault(__FUNCTION__, $required, $custom, $error);
+        $insert = ($val) ? 'checked="checked"' : '';
         $this->fields[] = $html = sprintf(
-            $default['html'], $default['class'], $id, $name, $default['required'], $default['custom'], $name, $label, $error
+            $default['html'], $default['class'], $insert, $id, $name, $default['required'], $default['custom'], $name, $label, $error
         );
         return $html;
     }
@@ -263,13 +293,16 @@ class FormBuilder
      * @param string $id
      * @param string $label
      * @param array $custom
+     * @param null $val
      * @return string
      */
-    public function radio($name = '', $id = '', $label = '', $custom = []) : string
+    public function radio($name = '', $id = '', $label = '', $custom = [], $val = null) : string
     {
         $default = $this->generateDefault(__FUNCTION__, false, $custom, false);
+        $value = $this->stringify($label);
+        $insert = ($value == $val) ? 'checked' : '';
         $this->fields[] = $html = sprintf(
-            $default['html'], $id, $name, $default['custom'], $name, $label
+            $default['html'], $value, $insert, $id, $name, $default['custom'], $id, $label
         );
         return $html;
     }
@@ -277,22 +310,23 @@ class FormBuilder
     /**
      * radioGroup - add collection of radio inputs to form
      *
+     * @param bool $error
+     * @param null $val
      * @param string $name
      * @param string $id
      * @param array $labels
-     * @param array $custom
      * @param null $title
-     * @param bool $error
+     * @param array $custom
      * @return string
      */
-    public function radioGroup($name = '', $id = '', $labels = [], $custom = [], $title = null, $error = false) : string
+    public function radioGroup($error = false, $val = null, $name = '', $id = '', $labels = [], $title = null, $custom = []) : string
     {
         $html = '<div class="form-group">';
         $error = ($error) ? $this->error($error) : false;
         $this->fields[] = $html .= (!is_null($title)) ? "<p class='lead'>{$title}</p>" : '';
         $i = 1;
         foreach ($labels as $label) {
-            $html .= $this->radio($name, $id . $i, $label, $custom, $i);
+            $html .= $this->radio($name, $id . $i, $label, $custom, $val);
             $i++;
         }
         $this->fields[] = $error;

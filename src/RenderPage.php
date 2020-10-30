@@ -6,7 +6,7 @@
  * Time: 08:40
  */
 
-namespace FormLibrary\App;
+namespace FormLibrary\Src;
 
 
 class RenderPage
@@ -17,6 +17,12 @@ class RenderPage
      * @var array
      */
     public static $page;
+
+    /**
+     * $template_override - allows template selection to be overridden by controller
+     * @var bool 
+     */
+    public static $template_override = false;
 
     /**
      * $template_dir - relative directory path for base templates
@@ -31,10 +37,10 @@ class RenderPage
     public static $page_dir = __DIR__ . '/../templates/pages/';
 
     /**
-     * $content - string for storing page html to be loaded in template
-     * @var string
+     * $content - storing page data to be loaded in template
+     * @var mixed
      */
-    public static $content = '';
+    public static $content;
 
     /**
      * render - parse the $page array and call any required controllers
@@ -54,7 +60,8 @@ class RenderPage
                 $obj = new $full_class();
                 $method = $page['method'];
                 $obj->$method($request);
-                self::$content .= $obj->html;
+                self::$content = $obj->html;
+                self::$template_override = $obj->template;
             } catch (\Exception $e) {
                 print_r($e->getMessage());
             }
@@ -69,7 +76,8 @@ class RenderPage
     public static function build()
     {
         include_once (self::$template_dir . "head.php");
-        include_once  (self::$page_dir . self::$page['template'] . '.php');
+        $template = self::$template_override ?? self::$page['template'];
+        include_once  (self::$page_dir . $template . '.php');
         include_once (self::$template_dir. 'footer.php');
     }
 

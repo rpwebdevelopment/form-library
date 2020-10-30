@@ -6,7 +6,7 @@
  * Time: 08:41
  */
 
-namespace FormLibrary\App;
+namespace FormLibrary\Src;
 
 
 class Routes
@@ -27,7 +27,7 @@ class Routes
      * $namespace - default controller namespace
      * @var string
      */
-    public $namespace = 'FormLibrary\\App\\Controllers\\';
+    public $namespace = 'FormLibrary\\Src\\Controllers\\';
 
     /**
      * Routes constructor.
@@ -45,12 +45,24 @@ class Routes
         $this->get = [
             '/' => [
                 'template' => 'home',
+                'namespace' => $this->namespace,
+                'class' => 'UserForm',
+                'method' => 'build'
+            ],
+            '/inline-one' => [
+                'template' => 'inline-one'
+            ],
+            '/inline-two' => [
+                'template' => 'inline-two'
             ]
         ];
 
         $this->post = [
             '/' => [
                 'template' => 'home',
+                'namespace' => $this->namespace,
+                'class' => 'UserForm',
+                'method' => 'handle'
             ]
         ];
     }

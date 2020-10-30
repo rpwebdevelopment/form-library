@@ -7,6 +7,8 @@
  */
 session_start();
 
+require_once ('configuration.php');
+
 require ('vendor/autoload.php');
 
 new \FormLibrary\Src\Bootstrap();

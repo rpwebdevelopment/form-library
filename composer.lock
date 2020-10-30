@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8a4e45e0469666a1ca16d5a64f3ce21",
+    "content-hash": "ce00a6fa4bbd5306615c4dd46e77b583",
     "packages": [
         {
             "name": "volnix/csrf",
@@ -1234,6 +1234,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-mysqli": "^7.4"
+    },
     "platform-dev": []
 }

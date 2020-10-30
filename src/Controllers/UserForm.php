@@ -8,6 +8,7 @@
 
 namespace FormLibrary\Src\Controllers;
 
+use FileLibrary\Src\FormSubmissions;
 use FileLibrary\Src\FormValidator;
 use FormLibrary\Src\Abstracts\AbstractForm;
 use FormLibrary\Src\FormBuilder;
@@ -39,7 +40,7 @@ class UserForm extends AbstractForm
             'checkbox:int'
         ],
         'service' => [
-            'arr:development,design,optimisation,paid_search'
+            'arr:development,design,optimisation,paid search'
         ]
     ];
 
@@ -86,8 +87,14 @@ class UserForm extends AbstractForm
         $validator = new FormValidator($this->rules);
         $validator->validate($request);
         if ($validator->successful) {
-            $this->html = $validator->request;
-            $this->template = 'success';
+            if ((new FormSubmissions())->insert($validator->request)) {
+                $this->html = $validator->request;
+                $this->template = 'success';
+            } else {
+                $this->errors['form'] = 'Unable to save submission. Please try again.';
+                $this->request = $validator->request;
+                $this->build();
+            }
         } else {
             $this->request = $request;
             $this->errors = $validator->errors;

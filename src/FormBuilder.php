@@ -121,9 +121,7 @@ class FormBuilder
     public function stringify($str) : string
     {
         return strtolower(
-            str_replace(' ', '_',
-                preg_replace('~(?<=\\w)([A-Z])~', '_$1', $str)
-            )
+            preg_replace('~(?<=\\w)([A-Z])~', '_$1', $str)
         );
     }
 
